@@ -1,0 +1,26 @@
+version: "3.1"
+services:
+    webserver:
+      container_name: master-nginx
+      build: docker/nginx
+      working_dir: /application
+      restart: on-failure
+      volumes:
+        - ./var/nginx_logs:/var/log/nginx
+        - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+
+    php-fpm:
+      container_name: master-fpm
+      build: docker/php-fpm
+      working_dir: /application
+      restart: on-failure
+      volumes:
+        - .:/application:cached
+        - ./var/log:/application/var/log
+        - ./docker/php-fpm/php-ini-overrides.ini:/etc/php/7.2/fpm/conf.d/99-overrides.ini
+        - ./docker/php-fpm/supervisord.conf:/etc/supervisord.conf
+        - ~/.ssh/:/root/.ssh/
+networks:
+  default:
+    external:
+      name: nirvana
