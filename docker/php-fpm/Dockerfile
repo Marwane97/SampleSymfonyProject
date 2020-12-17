@@ -14,15 +14,15 @@ RUN apk add --no-cache icu-dev zip
 RUN apk add --no-cache zip
 RUN apk add --no-cache rabbitmq-c-dev
 RUN apk add --no-cache libssh-dev
+RUN apk add --no-cache libmcrypt-dev
 RUN apk add --no-cache bash
 RUN apk add --no-cache openssh
-RUN apk add --no-cache libmcrypt-dev
 
 RUN pecl install memcached
 RUN echo extension=memcached.so >> /usr/local/etc/php/conf.d/memcached.ini
 
-RUN pecl install amqp
-RUN echo extension=amqp.so >> /usr/local/etc/php/conf.d/amqp.ini
+RUN pecl install mcrypt-1.0.1
+RUN echo extension=mcrypt.so >> /usr/local/etc/php/conf.d/mcrypt.ini
 
 RUN apk add --no-cache git
 RUN apk add --no-cache vim
@@ -35,15 +35,8 @@ RUN docker-php-ext-install zip
 RUN docker-php-ext-install soap
 RUN docker-php-ext-install gmp
 RUN docker-php-ext-install sockets
-RUN docker-php-ext-install pcntl
-
-RUN pecl install mcrypt-1.0.1
-RUN echo extension=mcrypt.so >> /usr/local/etc/php/conf.d/mcrypt.ini
 
 RUN pecl install mongodb
 RUN echo extension=mongodb.so >> /usr/local/etc/php/conf.d/mongodb.ini
-
-RUN mkdir -p /var/log/supervisor
-RUN apk add --no-cache supervisor
 
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
